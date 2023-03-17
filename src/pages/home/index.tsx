@@ -44,7 +44,7 @@ const HomePage = () => {
                 });
               }}
             >
-              <select style={{ marginRight: "15px" }}>
+              <select className={styles.dropdown}>
                 <option>All categories</option>
                 <option>Food</option>
                 <option>Technology</option>
@@ -59,18 +59,43 @@ const HomePage = () => {
               </button>
             </form>
             <div className={styles.suggestions}>
-              {[].map((item, index) => (
-                <img src={item} key={index} alt="name" />
+              {[
+                "https://centremk.com/media/4577/primark-logo.png?alias=standard-square&width=875&height=875",
+                "https://centremk.com/media/2041/retailer_costa.png?alias=standard-square&width=875&height=875",
+                "https://centremk.com/media/7030/john-lewis-negative.jpg?alias=standard-square&width=875&height=875",
+              ].map((item, index) => (
+                <img
+                  src={item}
+                  key={index}
+                  alt="name"
+                  className={styles.suggestion}
+                />
               ))}
-              <div className={styles.suggestion}>Primark</div>
-              <div className={styles.suggestion}>John Lewis</div>
-              <div className={styles.suggestion}>Costa</div>
             </div>
             {/* on click show loading or searching */}
           </div>
         );
       case "3":
-        return <></>;
+        return (
+          <div className={cx(styles.step, styles["step-three"])}>
+            <div className={cx(styles.images)}>
+              <div>
+                <img
+                  src="/images/primark-store-front.png"
+                  alt="Primark store front"
+                />
+              </div>
+              <div>
+                <img src="/images/primark-map.jpg" alt="Primark map location" />
+              </div>
+            </div>
+            <div className={styles.details}>
+              <img alt="Waving hand" src="/images/waving-hand.png" />
+              <h2>We've arrived at primark</h2>
+              <p>Enjoy your shopping</p>
+            </div>
+          </div>
+        );
       default:
         return <>Not found</>;
     }
