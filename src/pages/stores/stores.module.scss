@@ -1,0 +1,97 @@
+.store {
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  gap: 25px;
+  margin: 0 auto;
+  justify-content: center;
+  height: 100%;
+
+  .brand-logo {
+    width: 100%;
+    height: 300px;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.options {
+  max-height: 600px;
+  overflow: scroll;
+  width: fit-content;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  .option {
+    display: flex;
+    gap: 20px;
+    height: fit-content;
+    overflow: hidden;
+    flex-shrink: 0;
+    height: 300px;
+
+    .map {
+      flex: 0.4;
+      height: 100%;
+      border: 2px solid black;
+      color: black;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: auto;
+      }
+    }
+
+    .details {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex: 0.6;
+
+      .description {
+        margin-bottom: 13px;
+        font-size: 20px;
+      }
+
+      .address {
+        font-weight: 600;
+        font-size: 23px;
+        margin-bottom: 13px;
+      }
+
+      .status {
+        background: #1ceb75;
+        padding: 6px 25px;
+        color: white;
+        width: fit-content;
+        border-radius: 5px;
+      }
+
+      .action-button {
+        outline: none;
+        position: relative;
+        text-decoration: none;
+        width: 300px;
+        align-items: center !important;
+        border: 2px solid #0d9648;
+        color: #0d9648;
+        font-size: 22px;
+        background: transparent;
+        cursor: pointer;
+        display: flex;
+        justify-content: center !important;
+        padding: 25px 25px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+    }
+  }
+}
