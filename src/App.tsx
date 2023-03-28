@@ -1,6 +1,6 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Complete, Home, Search, Stores } from "./pages";
+import { Complete, Home, Navigation, Search, Stores } from "./pages";
 
 const App: React.FC = () => {
   const router = createBrowserRouter([
@@ -17,7 +17,11 @@ const App: React.FC = () => {
       element: <Stores />,
     },
     {
-      path: "/complete",
+      path: "/stores/:storeId/navigation",
+      element: <Navigation />,
+    },
+    {
+      path: "/stores/:storeId/complete",
       element: <Complete />,
     },
   ]);

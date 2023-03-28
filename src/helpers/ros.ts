@@ -9,10 +9,12 @@ type initiateTopicType = (config: {
 
 export const initiateRos: InitiateRosType = () => {
   const ros = new Ros({
-    url: "",
+    url: "ws://localhost:9090",
   });
 
-  ros.on("connection", () => {});
+  ros.on("connection", (event) => {
+    console.log("Connected")
+  });
   ros.on("error", () => {});
   ros.on("close", () => {});
 

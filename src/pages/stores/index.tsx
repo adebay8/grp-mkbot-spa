@@ -1,41 +1,33 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Message, Topic } from "roslib";
-import { initiateRos, initiateTopic } from "../../helpers";
+import { initiateRos, initiateTopic, stores } from "../../helpers";
 import { DefaultLayout } from "../../layouts";
 import styles from "./stores.module.scss";
 
 const Stores = () => {
   const [, setRosMessage] = useState<Message>();
   const [rosTopic, setRosTopic] = useState<Topic>();
+  const params = useParams();
+  const navigate = useNavigate();
 
   const sendTargetToROS: React.MouseEventHandler<HTMLButtonElement> = () => {
-    const targetLocation = new Message("1");
+    const targetLocation = new Message({ data: "502" });
     rosTopic?.publish(targetLocation);
+    navigate(`/stores/${params.storeId}/navigation`);
   };
 
-  useEffect(() => {
-    const ros = initiateRos();
-    const topic = initiateTopic({
-      ros,
-      name: "/cmd_vel",
-      messageType: "std_msgs/String",
-    });
-    setRosTopic(topic);
-
-    topic.subscribe((message) => {
-      setRosMessage(message);
-      console.log(message);
-    });
-  }, []);
-
-  return (
-    <DefaultLayout>
+  const renderStore = () => {
+    const store = stores.find(
+      ({ name }) => name.toLowerCase() === params.storeId
+    );
+    if (!store) return <>Store not found</>;
+    return (
       <section className={styles.store}>
         <figure className={styles["brand-logo"]}>
           <img
-            src={"/images/stores/rectangular/hmv-rectangular.jpg"}
-            alt={"/images/stores/hmv-colour.jpg"}
+            src={store.rectangularImage}
+            alt={store.name}
             className={styles.logo}
           />
         </figure>
@@ -46,14 +38,8 @@ const Stores = () => {
             </div>
             <div className={styles.details}>
               <div>
-                <p className={styles.description}>
-                  Feed your love of art at AC Framing where a fantastic
-                  selection of original and limited edition art prints awaits
-                  you. We also offer a bespoke framing service.
-                </p>
-                <p className={styles.address}>
-                  33a Silbury Blvd, Milton Keynes MK9 3ES
-                </p>
+                <p className={styles.description}>{store.description}</p>
+                <p className={styles.address}>{store.address}</p>
                 <div className={styles.status}>Open</div>
               </div>
               <Link to="/complete"></Link>
@@ -67,8 +53,25 @@ const Stores = () => {
           </article>
         </div>
       </section>
-    </DefaultLayout>
-  );
+    );
+  };
+
+  useEffect(() => {
+    const ros = initiateRos();
+    const topic = initiateTopic({
+      ros,
+      name: "/txt_msg",
+      messageType: "std_msgs/String",
+    });
+    setRosTopic(topic);
+
+    topic.subscribe((message) => {
+      setRosMessage(message);
+      console.log(message);
+    });
+  }, []);
+
+  return <DefaultLayout>{renderStore()}</DefaultLayout>;
 };
 
 export default Stores;
