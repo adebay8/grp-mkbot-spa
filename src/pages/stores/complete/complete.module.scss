@@ -1,5 +1,14 @@
-.step-three {
+.complete {
   width: 80%;
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.step-three {
+  width: 100%;
   margin: 0 auto;
 
   .images {
@@ -15,8 +24,14 @@
       overflow: hidden;
     }
 
+    div:first-child{
+      display: flex;
+      justify-content: center;
+    }
+
     img {
-      width: 100%;
+      height: 100%;
+      width: auto;
     }
   }
 
