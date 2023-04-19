@@ -1,32 +1,44 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Message, Topic } from "roslib";
-import { initiateRos, initiateTopic, stores } from "../../helpers";
+import { initiateRos, initiateTopic } from "../../helpers";
 import { DefaultLayout } from "../../layouts";
 import styles from "./stores.module.scss";
+import { useLazyQuery } from "@apollo/client";
+import { GET_STORE } from "./query";
+import { StoreType } from "../../gql/graphql";
+import { Spinner } from "../../components";
 
 const Stores = () => {
+  const [getStore] = useLazyQuery(GET_STORE);
+
+  const [store, setStore] = useState<StoreType>();
+  const [loading, setLoading] = useState(true);
   const [, setRosMessage] = useState<Message>();
   const [rosTopic, setRosTopic] = useState<Topic>();
+
   const params = useParams();
   const navigate = useNavigate();
 
   const sendTargetToROS: React.MouseEventHandler<HTMLButtonElement> = () => {
-    const targetLocation = new Message({ data: "502" });
+    const targetLocation = new Message({ data: store?.id });
     rosTopic?.publish(targetLocation);
     navigate(`/stores/${params.storeId}/navigation`);
   };
 
   const renderStore = () => {
-    const store = stores.find(
-      ({ name }) => name.toLowerCase() === params.storeId
-    );
+    if (loading)
+      return (
+        <div className={styles["spinner-container"]}>
+          <Spinner />
+        </div>
+      );
     if (!store) return <>Store not found</>;
     return (
       <section className={styles.store}>
         <figure className={styles["brand-logo"]}>
           <img
-            src={store.rectangularImage}
+            src={store.rectangularLogo}
             alt={store.name}
             className={styles.logo}
           />
@@ -34,7 +46,7 @@ const Stores = () => {
         <div className={styles.options}>
           <article className={styles.option}>
             <div className={styles.map}>
-              <img src="/images/primark-map.jpg" alt="Primark map location" />
+              <img src={store.image} alt={store.name} />
             </div>
             <div className={styles.details}>
               <div>
@@ -60,7 +72,7 @@ const Stores = () => {
     const ros = initiateRos();
     const topic = initiateTopic({
       ros,
-      name: "/txt_msg",
+      name: "/destination_id",
       messageType: "std_msgs/String",
     });
     setRosTopic(topic);
@@ -69,6 +81,23 @@ const Stores = () => {
       setRosMessage(message);
       console.log(message);
     });
+  }, []);
+
+  useEffect(() => {
+    setLoading(true);
+    getStore({
+      variables: {
+        name: params.storeId,
+      },
+    })
+      .then((res) => {
+        setStore(res.data.store);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+    // eslint-disable-next-line
   }, []);
 
   return <DefaultLayout>{renderStore()}</DefaultLayout>;

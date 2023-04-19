@@ -1,12 +1,30 @@
 import cx from "classnames";
 import { BsSearch } from "react-icons/bs";
 import { Link } from "react-router-dom";
-import { stores } from "../../helpers";
 import { DefaultLayout } from "../../layouts";
 import styles from "./search.module.scss";
+import { useLazyQuery } from "@apollo/client";
+import { GET_STORES } from "./query";
+import { Spinner } from "../../components";
+import { useEffect, useState } from "react";
+import { StoreType } from "../../gql/graphql";
 
-const HomeSearch: React.FC<any> = ({ setSearchParams, searchParams }) => {
-  
+const HomeSearch: React.FC<any> = () => {
+  const [getStores] = useLazyQuery(GET_STORES);
+
+  const [stores, setStores] = useState<StoreType[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    getStores()
+      .then((res) => {
+        setStores(res.data.stores);
+        setLoading(false);
+      })
+      .catch(() => {});
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <DefaultLayout>
@@ -32,21 +50,24 @@ const HomeSearch: React.FC<any> = ({ setSearchParams, searchParams }) => {
           </button>
         </form>
         <div className={styles.suggestions}>
-          {stores.map((item, index) => (
-            <Link
-              to={`/stores/${item.name.split(" ").join("-").toLowerCase()}`}
-              key={index}
-            >
-              <img
-                src={item.image}
-                key={index}
-                alt="name"
-                className={styles.suggestion}
-              />
-            </Link>
-          ))}
+          {loading ? (
+            <Spinner />
+          ) : (
+            stores.map((item) => (
+              <Link
+                to={`/stores/${item.name.split(" ").join("-").toLowerCase()}`}
+                key={item.id}
+              >
+                <img
+                  src={item.logo}
+                  key={item.id}
+                  alt={item.name}
+                  className={styles.suggestion}
+                />
+              </Link>
+            ))
+          )}
         </div>
-        {/* on click show loading or searching */}
       </div>
     </DefaultLayout>
   );

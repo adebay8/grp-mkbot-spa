@@ -11,6 +11,10 @@
   top: 0;
   position: relative;
 
+  &.center {
+    justify-content: center;
+  }
+
   .button-container {
     position: relative;
     display: block;
@@ -40,6 +44,7 @@
     width: 100%;
     align-items: center;
     justify-content: center;
+    gap: 15px;
   }
 
   .start-button {
@@ -47,23 +52,23 @@
     position: relative;
     text-decoration: none;
     width: 400px;
-    //   height: 200px;
     align-items: center !important;
     background: #0d9648;
     border: 1px solid transparent;
     color: #fff;
     cursor: pointer;
-    display: flex;
-    justify-content: center !important;
     padding: 25px 25px;
     border-radius: 15px;
-    //   margin: -40px 0px -23px -40px;
     display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 20px;
+
     svg {
       display: block;
+      transform: scaleX(-1);
     }
+
     p {
       font-size: 25px;
       font-weight: 550;
@@ -86,9 +91,7 @@
     cursor: pointer;
     display: flex;
     justify-content: center !important;
-    // padding: 25px 25px;
     border-radius: 50%;
-    //   margin: -40px 0px -23px -40px;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -109,6 +112,20 @@
     }
   }
 
+  .listening {
+    font-size: 30px;
+    margin-top: 60px;
+    font-weight: bold;
+  }
+
+  .use-microphone {
+    text-decoration: none;
+    outline: none;
+    background: transparent;
+    height: 100%;
+    border: none;
+  }
+
   @keyframes circle {
     from {
       transform: scale(0);
@@ -121,12 +138,11 @@
   }
 
   .circle {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     position: absolute;
-    transform: translate(-50%, -50%);
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+    // box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
   }
 
   .one {
