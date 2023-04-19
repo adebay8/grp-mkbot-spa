@@ -13,7 +13,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n  mutation GetStoreFromSpeech($recording: Upload, $uri: String) {\n    getStoreFromSpeech(recording: $recording, uri: $uri) {\n      store {\n        id\n        name\n        description\n      }\n    }\n  }\n": types.GetStoreFromSpeechDocument,
+    "\n  mutation GetStoreFromSpeech($uri: String!) {\n    getStoreFromSpeech(uri: $uri) {\n      store {\n        id\n        name\n        description\n      }\n    }\n  }\n": types.GetStoreFromSpeechDocument,
 };
 
 /**
@@ -33,7 +33,7 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation GetStoreFromSpeech($recording: Upload, $uri: String) {\n    getStoreFromSpeech(recording: $recording, uri: $uri) {\n      store {\n        id\n        name\n        description\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation GetStoreFromSpeech($recording: Upload, $uri: String) {\n    getStoreFromSpeech(recording: $recording, uri: $uri) {\n      store {\n        id\n        name\n        description\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  mutation GetStoreFromSpeech($uri: String!) {\n    getStoreFromSpeech(uri: $uri) {\n      store {\n        id\n        name\n        description\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation GetStoreFromSpeech($uri: String!) {\n    getStoreFromSpeech(uri: $uri) {\n      store {\n        id\n        name\n        description\n      }\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

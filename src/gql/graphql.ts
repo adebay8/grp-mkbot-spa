@@ -18,11 +18,6 @@ export type Scalars = {
    * [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
    */
   DateTime: any;
-  /**
-   * Create scalar that ignores normal serialization/deserialization, since
-   * that will be handled by the multipart request spec
-   */
-  Upload: any;
 };
 
 export type AddCategory = {
@@ -119,8 +114,7 @@ export type MutationAddCategoryArgs = {
 
 
 export type MutationGetStoreFromSpeechArgs = {
-  recording?: InputMaybe<Scalars['Upload']>;
-  uri?: InputMaybe<Scalars['String']>;
+  uri: Scalars['String'];
 };
 
 export type Query = {
@@ -150,12 +144,11 @@ export type StoreType = {
 };
 
 export type GetStoreFromSpeechMutationVariables = Exact<{
-  recording?: InputMaybe<Scalars['Upload']>;
-  uri?: InputMaybe<Scalars['String']>;
+  uri: Scalars['String'];
 }>;
 
 
 export type GetStoreFromSpeechMutation = { __typename?: 'Mutation', getStoreFromSpeech?: { __typename?: 'GetStoreFromSpeech', store?: { __typename?: 'StoreType', id: string, name: string, description: string } | null } | null };
 
 
-export const GetStoreFromSpeechDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"GetStoreFromSpeech"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"recording"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Upload"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"uri"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getStoreFromSpeech"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"recording"},"value":{"kind":"Variable","name":{"kind":"Name","value":"recording"}}},{"kind":"Argument","name":{"kind":"Name","value":"uri"},"value":{"kind":"Variable","name":{"kind":"Name","value":"uri"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"store"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]}}]}}]} as unknown as DocumentNode<GetStoreFromSpeechMutation, GetStoreFromSpeechMutationVariables>;
+export const GetStoreFromSpeechDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"GetStoreFromSpeech"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"uri"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getStoreFromSpeech"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"uri"},"value":{"kind":"Variable","name":{"kind":"Name","value":"uri"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"store"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]}}]}}]} as unknown as DocumentNode<GetStoreFromSpeechMutation, GetStoreFromSpeechMutationVariables>;
