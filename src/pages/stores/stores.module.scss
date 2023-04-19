@@ -60,7 +60,7 @@
         overflow: hidden;
         display: -webkit-box;
         -webkit-line-clamp: 3; /* number of lines to show */
-        line-clamp: 3; 
+        line-clamp: 3;
         -webkit-box-orient: vertical;
       }
 
@@ -99,4 +99,11 @@
       }
     }
   }
+}
+
+.spinner-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 }

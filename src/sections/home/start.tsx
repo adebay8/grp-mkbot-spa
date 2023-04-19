@@ -1,9 +1,9 @@
 import cx from "classnames";
 import styles from "./styles.module.scss";
-import { BsPlay } from "react-icons/bs";
+import { FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { FaMicrophone, FaStop } from "react-icons/fa";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useMutation } from "@apollo/client";
 import { GET_STORE_FROM_SPEECH } from "./speech";
 import { useNavigate } from "react-router-dom";
@@ -65,6 +65,8 @@ const StartSection: React.FC<any> = ({ setSearchParams }) => {
       mediaRecorder.current.stop();
 
       mediaRecorder.current.onstop = () => {
+        stream?.getTracks().forEach((track) => track.stop());
+
         const audioBlob = new Blob(audioChunks, { type: mimeType });
 
         let formData = new FormData();
@@ -101,59 +103,24 @@ const StartSection: React.FC<any> = ({ setSearchParams }) => {
       .catch((err) => {});
   };
 
-  useEffect(() => {
-    getMicrophonePermission();
-  }, []);
-
   return (
-    <div className={cx(styles.step, styles["step-one"])}>
-      <video autoPlay className={styles.video} loop>
-        <source
-          src="https://storage.googleapis.com/mkbot_staticfiles/videos/start-videos.mp4"
-          type="video/mp4"
-        />
-      </video>
-      <h1 className={styles.heading}>Where do you want to go?</h1>
-      <div className={styles["start-action"]}>
-        <Link to="/search">
-          <button className={styles["start-button"]}>
-            <BsPlay size={50} />
-            <p>Start</p>
-          </button>
-        </Link>
-        <button
-          onClick={() => {
-            setShowRecordingButton(true);
-            startRecording();
-          }}
-        >
-          <FaMicrophone size={70} />
-        </button>
-      </div>
-      {showRecordingButton && (
+    <div
+      className={cx(styles.step, styles["step-one"], {
+        [styles.center]: showRecordingButton,
+      })}
+    >
+      {showRecordingButton ? (
         <>
           <div className={cx(styles["record-button-container"])}>
-            <div
-              className={cx(styles.circle, {
-                [styles.one]: true,
-              })}
-            />
-            <div
-              className={cx(styles.circle, {
-                [styles.two]: true,
-              })}
-            />
-            <div
-              className={cx(styles.circle, {
-                [styles.three]: true,
-              })}
-            />
-
+            <div className={cx(styles.circle, styles.one)} />
+            <div className={cx(styles.circle, styles.two)} />
+            <div className={cx(styles.circle, styles.three)} />
             <button
               className={styles["record-button"]}
-              onClick={
-                recordingAudio === false ? startRecording : stopRecording
-              }
+              onClick={() => {
+                stopRecording();
+                setShowRecordingButton(false);
+              }}
             >
               {recordingAudio === true ? (
                 <FaStop size={70} />
@@ -162,7 +129,36 @@ const StartSection: React.FC<any> = ({ setSearchParams }) => {
               )}
             </button>
           </div>
-          <p>start talking</p>
+          <p className={styles.listening}>Listening...</p>
+        </>
+      ) : (
+        <>
+          <video autoPlay className={styles.video} loop muted playsInline>
+            <source
+              src="https://storage.googleapis.com/mkbot_staticfiles/videos/start-videos.mp4"
+              type="video/mp4"
+            />
+          </video>
+          <h1 className={styles.heading}>Where do you want to go?</h1>
+          <div className={styles["start-action"]}>
+            <Link to="/search">
+              <button className={styles["start-button"]}>
+                <FaSearch size={25} />
+                <p>Find store</p>
+              </button>
+            </Link>
+            <button
+              onClick={() => {
+                getMicrophonePermission().then(() => {
+                  setShowRecordingButton(true);
+                  startRecording();
+                });
+              }}
+              className={styles["use-microphone"]}
+            >
+              <FaMicrophone size={70} />
+            </button>
+          </div>
         </>
       )}
     </div>

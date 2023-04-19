@@ -121,12 +121,36 @@ export type Query = {
   __typename?: 'Query';
   _debug?: Maybe<DjangoDebug>;
   categories?: Maybe<Array<Maybe<CategoryType>>>;
+  store?: Maybe<StoreType>;
   stores?: Maybe<Array<Maybe<StoreType>>>;
 };
 
 
 export type QueryCategoriesArgs = {
   name?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryStoreArgs = {
+  name: Scalars['String'];
+};
+
+
+export type QueryStoresArgs = {
+  name?: InputMaybe<Scalars['String']>;
+};
+
+export type StoreNodeType = {
+  __typename?: 'StoreNodeType';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  locationCell: Scalars['String'];
+  nextNode?: Maybe<StoreNodeType>;
+  nextStoreNodes: Array<StoreNodeType>;
+  previousNode?: Maybe<StoreNodeType>;
+  previousStoreNodes: Array<StoreNodeType>;
+  stores: Array<StoreType>;
+  updatedAt: Scalars['DateTime'];
 };
 
 export type StoreType = {
@@ -139,6 +163,7 @@ export type StoreType = {
   image: Scalars['String'];
   logo: Scalars['String'];
   name: Scalars['String'];
+  node?: Maybe<StoreNodeType>;
   rectangularLogo: Scalars['String'];
   updatedAt: Scalars['DateTime'];
 };
