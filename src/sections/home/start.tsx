@@ -106,7 +106,10 @@ const StartSection: React.FC<any> = ({ setSearchParams }) => {
   return (
     <div className={cx(styles.step, styles["step-one"])}>
       <video autoPlay className={styles.video} loop>
-        <source src="/videos/start-videos.mp4" type="video/mp4" />
+        <source
+          src="https://storage.googleapis.com/mkbot_staticfiles/videos/start-videos.mp4"
+          type="video/mp4"
+        />
       </video>
       <h1 className={styles.heading}>Where do you want to go?</h1>
       <div className={styles["start-action"]}>
