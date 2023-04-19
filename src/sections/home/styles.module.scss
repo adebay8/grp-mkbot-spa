@@ -7,6 +7,10 @@
 }
 
 .step-one {
+  justify-content: flex-start;
+  top: 0;
+  position: relative;
+
   .button-container {
     position: relative;
     display: block;
@@ -20,8 +24,9 @@
     box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.25);
   }
 
-  .gif {
-    width: 400px;
+  .video {
+    width: 700px;
+    margin-bottom: 30px;
   }
 
   .heading {
@@ -30,7 +35,14 @@
     margin-bottom: 30px;
   }
 
-  .button {
+  .start-action {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .start-button {
     outline: none;
     position: relative;
     text-decoration: none;
@@ -57,103 +69,78 @@
       font-weight: 550;
     }
   }
-}
 
-.step-two {
-  .search-container {
+  .record-button {
+    outline: none;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    text-decoration: none;
+    width: 150px;
+    height: 150px;
+    align-items: center !important;
+    background: #0ea750;
+    border: 1px solid transparent;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    justify-content: center !important;
+    // padding: 25px 25px;
+    border-radius: 50%;
+    //   margin: -40px 0px -23px -40px;
     display: flex;
     align-items: center;
-    border: 2px solid green;
-    border-radius: 60px;
-    width: 70%;
-    min-height: 120px;
-    padding: 10px 30px;
+    gap: 10px;
+    z-index: 3;
 
-    .dropdown {
-      height: 70%;
-      outline: none;
-      border: 2px solid #ddd;
-      margin-right: 15px;
-      border-radius: 20px;
-      padding: 0 10px;
+    svg {
+      display: block;
+      fill: #eee;
     }
 
-    .input {
-      outline: none;
-      border: none;
-      background: transparent;
-      flex: 1;
-      height: 100%;
-      font-size: 25px;
-    }
-
-    .button {
-      outline: none;
+    &-container {
       position: relative;
-      text-decoration: none;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-    }
-  }
-
-  .suggestions {
-    width: 70%;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    margin-top: 10px;
-    padding: 10px;
-    gap: 20px;
-    height: 700px;
-    overflow: scroll;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-
-    .suggestion {
-      width: 100%;
-      cursor: pointer;
-    }
-  }
-}
-
-.options {
-  display: flex;
-  flex-direction: column;
-  width: 70%;
-  gap: 15px;
-  height: 600px;
-  overflow: scroll;
-  margin-top: 20px;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  .option {
-    display: flex;
-    gap: 15px;
-    height: fit-content;
-    overflow: hidden;
-    flex-shrink: 0;
-    height: 300px;
-
-    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 70%;
       height: 300px;
-      width: 300px;
     }
+  }
 
-    .map {
-      flex: 1;
-      height: 100%;
-      border: 2px solid black;
-      color: black;
-      overflow: hidden;
-
-      img {
-        width: 100%;
-        height: auto;
-      }
+  @keyframes circle {
+    from {
+      transform: scale(0);
+      opacity: 1;
     }
+    to {
+      transform: scale(4);
+      opacity: 0;
+    }
+  }
+
+  .circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+  }
+
+  .one {
+    animation: circle 6s 4s infinite linear;
+    background: #0d9648;
+  }
+
+  .two {
+    animation: circle 6s 2s infinite linear;
+    background: #0d9648;
+  }
+
+  .three {
+    animation: circle 6s 0s infinite linear;
+    background: #0d9648;
   }
 }
