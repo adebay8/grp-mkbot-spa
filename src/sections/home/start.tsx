@@ -12,7 +12,7 @@ const mimeType = "audio/webm";
 
 const StartSection: React.FC<any> = ({ setSearchParams }) => {
   const [getStoreFromSpeech] = useMutation(GET_STORE_FROM_SPEECH);
-  const [permission, setPermission] = useState(false);
+  const [, setPermission] = useState(false);
   const [recordingAudio, setRecordingAudio] = useState(false);
   const [showRecordingButton, setShowRecordingButton] = useState(false);
   const [stream, setStream] = useState<MediaStream>();
@@ -101,7 +101,9 @@ const StartSection: React.FC<any> = ({ setSearchParams }) => {
       .catch((err) => {});
   };
 
-  useEffect(() => {}, [getMicrophonePermission()]);
+  useEffect(() => {
+    getMicrophonePermission();
+  }, []);
 
   return (
     <div className={cx(styles.step, styles["step-one"])}>
