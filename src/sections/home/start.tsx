@@ -1,23 +1,32 @@
 import cx from "classnames";
 import styles from "./styles.module.scss";
 import { FaSearch } from "react-icons/fa";
+import { BiArrowBack } from "react-icons/bi";
 import { Link } from "react-router-dom";
-import { FaMicrophone, FaStop } from "react-icons/fa";
+import { FaMicrophone } from "react-icons/fa";
 import { useRef, useState } from "react";
 import { useMutation } from "@apollo/client";
-import { GET_STORE_FROM_SPEECH } from "./speech";
-import { useNavigate } from "react-router-dom";
+import { GET_STORE_FROM_SPEECH } from "./query";
+import { HomeSpeech, TranscriptionState } from "../speech";
 
 const mimeType = "audio/webm";
 
-const StartSection: React.FC<any> = ({ setSearchParams }) => {
+export enum RecordingStatus {
+  recording = "recording",
+  transcribing = "transcribing",
+  completedSuccess = "completedSuccess",
+  completedFailed = "completedFailed",
+}
+
+const StartSection: React.FC<any> = () => {
   const [getStoreFromSpeech] = useMutation(GET_STORE_FROM_SPEECH);
   const [, setPermission] = useState(false);
-  const [recordingAudio, setRecordingAudio] = useState(false);
+  const [recorderStatus, setRecorderStatus] = useState(
+    RecordingStatus.recording
+  );
   const [showRecordingButton, setShowRecordingButton] = useState(false);
   const [stream, setStream] = useState<MediaStream>();
   const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
-  const navigate = useNavigate();
   const mediaRecorder = useRef<MediaRecorder>();
 
   const getMicrophonePermission = async () => {
@@ -28,16 +37,16 @@ const StartSection: React.FC<any> = ({ setSearchParams }) => {
           video: false,
         });
         setPermission(true);
-
         setStream(mediaStream);
+        return mediaStream;
       } catch (err) {}
     } else {
       alert("The MediaRecorder API is not supported in your browser.");
     }
   };
 
-  const startRecording = async () => {
-    setRecordingAudio(true);
+  const startRecording = (stream?: MediaStream) => {
+    setRecorderStatus(RecordingStatus.recording);
 
     if (stream) {
       const media = new MediaRecorder(stream, { mimeType: mimeType });
@@ -45,6 +54,8 @@ const StartSection: React.FC<any> = ({ setSearchParams }) => {
       mediaRecorder.current = media;
 
       mediaRecorder.current.start();
+
+      console.log("inside media recorder");
 
       let localAudioChunks: Blob[] = [];
 
@@ -59,11 +70,9 @@ const StartSection: React.FC<any> = ({ setSearchParams }) => {
   };
 
   const stopRecording = () => {
-    setRecordingAudio(false);
+    setRecorderStatus(RecordingStatus.transcribing);
 
     if (mediaRecorder.current) {
-      mediaRecorder.current.stop();
-
       mediaRecorder.current.onstop = () => {
         stream?.getTracks().forEach((track) => track.stop());
 
@@ -76,31 +85,44 @@ const StartSection: React.FC<any> = ({ setSearchParams }) => {
 
         setAudioChunks([]);
       };
+
+      mediaRecorder.current.stop();
     }
   };
 
   const runMutation = async (formData: FormData) => {
-    const uploadResponse = await fetch("http://127.0.0.1:8000/speech/upload", {
+    fetch("http://127.0.0.1:8000/speech/upload", {
       method: "POST",
       body: formData,
-    });
-
-    if (!uploadResponse.ok) return;
-
-    const responseData = await uploadResponse.json();
-
-    getStoreFromSpeech({
-      variables: {
-        uri: responseData.uri,
-      },
     })
       .then((res) => {
-        if (res.data.getStoreFromSpeech.store) {
-          const { name } = res.data.getStoreFromSpeech.store;
-          navigate(`/stores/${name.toLowerCase()}`);
+        if (!res.ok) {
+          setRecorderStatus(RecordingStatus.completedFailed);
+          return null;
         }
+        return res.json();
       })
-      .catch((err) => {});
+      .then((res) => {
+        getStoreFromSpeech({
+          variables: {
+            uri: res.uri,
+          },
+        })
+          .then((res) => {
+            if (res.data.getStoreFromSpeech.store) {
+              // const { name } = res.data.getStoreFromSpeech.store;
+              // navigate(`/stores/${name.toLowerCase()}`);
+            } else {
+              setRecorderStatus(RecordingStatus.completedFailed);
+            }
+          })
+          .catch((err) => {
+            setRecorderStatus(RecordingStatus.completedFailed);
+          });
+      })
+      .catch((e) => {
+        setRecorderStatus(RecordingStatus.completedFailed);
+      });
   };
 
   return (
@@ -111,25 +133,31 @@ const StartSection: React.FC<any> = ({ setSearchParams }) => {
     >
       {showRecordingButton ? (
         <>
-          <div className={cx(styles["record-button-container"])}>
-            <div className={cx(styles.circle, styles.one)} />
-            <div className={cx(styles.circle, styles.two)} />
-            <div className={cx(styles.circle, styles.three)} />
-            <button
-              className={styles["record-button"]}
-              onClick={() => {
-                stopRecording();
-                setShowRecordingButton(false);
-              }}
-            >
-              {recordingAudio === true ? (
-                <FaStop size={70} />
-              ) : (
-                <FaMicrophone size={70} />
-              )}
-            </button>
-          </div>
-          <p className={styles.listening}>Listening...</p>
+          <button
+            className={styles.back}
+            onClick={() => {
+              setShowRecordingButton(false);
+            }}
+          >
+            <BiArrowBack size={25} />
+          </button>
+          <HomeSpeech
+            recorderStatus={recorderStatus}
+            startRecording={() =>
+              getMicrophonePermission().then((stream) => {
+                startRecording(stream);
+              })
+            }
+            stopRecording={stopRecording}
+          />
+          <TranscriptionState
+            recorderStatus={recorderStatus}
+            startRecording={() =>
+              getMicrophonePermission().then((stream) => {
+                startRecording(stream);
+              })
+            }
+          />
         </>
       ) : (
         <>
@@ -149,9 +177,9 @@ const StartSection: React.FC<any> = ({ setSearchParams }) => {
             </Link>
             <button
               onClick={() => {
-                getMicrophonePermission().then(() => {
+                getMicrophonePermission().then((stream) => {
                   setShowRecordingButton(true);
-                  startRecording();
+                  startRecording(stream);
                 });
               }}
               className={styles["use-microphone"]}

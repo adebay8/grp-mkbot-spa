@@ -1,0 +1,157 @@
+.record-button {
+  outline: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-decoration: none;
+  width: 150px;
+  height: 150px;
+  align-items: center !important;
+  background: #cf0000; //  ;
+  border: 1px solid transparent;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: center !important;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 3;
+
+  svg {
+    display: block;
+    fill: #eee;
+  }
+
+  &-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70%;
+    height: 300px;
+    transition: height 0.5s linear;
+
+    &.completed {
+      &Failed {
+        height: 200px;
+      }
+    }
+  }
+
+  &.transcribing {
+    background: #007acc;
+  }
+
+  &.completedFailed {
+    background: #0ea750;
+  }
+}
+
+.transcription-state {
+  &-text {
+    font-size: 30px;
+    margin-top: 60px;
+    font-weight: bold;
+    text-align: center;
+  }
+}
+
+.use-microphone {
+  text-decoration: none;
+  outline: none;
+  background: transparent;
+  height: 100%;
+  border: none;
+  cursor: pointer;
+}
+
+@keyframes circle {
+  from {
+    transform: scale(0);
+    opacity: 1;
+  }
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  position: absolute;
+
+  &.transcribing {
+    background: #007acc;
+  }
+
+  &.completedFailed {
+    background: #0d9648;
+    animation: none;
+  }
+}
+
+.one {
+  animation: circle 6s 4s infinite linear;
+  background: #ee0000;
+}
+
+.two {
+  animation: circle 6s 2s infinite linear;
+  background: #ee0000;
+}
+
+.three {
+  animation: circle 6s 0s infinite linear;
+  background: #ee0000;
+}
+
+.result {
+  text-align: center;
+  margin-top: 40px;
+
+  p {
+    font-size: 25px;
+    // margin-top: 60px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+
+    .action-button {
+      text-decoration: none;
+      outline: none;
+      background: transparent;
+      height: 100%;
+      border: none;
+      cursor: pointer;
+      background: #0d9648;
+      color: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      font-weight: 500;
+      font-size: 20px;
+      min-width: 200px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: center;
+
+      &.outline {
+        background: transparent;
+        border: 2px solid #0d9648;
+        color: #0d9648;
+      }
+    }
+  }
+}
