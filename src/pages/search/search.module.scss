@@ -11,7 +11,7 @@
     display: flex;
     align-items: center;
     border: 2px solid green;
-    border-radius: 60px;
+    border-radius: 30px;
     width: 70%;
     min-height: 120px;
     padding: 10px 30px;
@@ -19,9 +19,9 @@
     .dropdown {
       height: 70%;
       outline: none;
-      border: 2px solid #ddd;
+      border: 2px solid #808080;
       margin-right: 15px;
-      border-radius: 20px;
+      border-radius: 15px;
       padding: 0 10px;
     }
 
