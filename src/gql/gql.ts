@@ -13,6 +13,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+    "\n  query GetStores($name: String) {\n    stores: stores(name: $name) {\n      id\n      image\n      logo\n      name\n      category {\n        name\n        externalId\n      }\n    }\n    categories: categories(name: $name) {\n      name\n      externalId\n    }\n  }\n": types.GetStoresDocument,
+    "\n  query GetCategories($name: String) {\n    categories(name: $name) {\n      name\n      externalId\n    }\n  }\n": types.GetCategoriesDocument,
     "\n  mutation GetStoreFromSpeech($uri: String!) {\n    getStoreFromSpeech(uri: $uri) {\n      store {\n        id\n        name\n        description\n      }\n    }\n  }\n": types.GetStoreFromSpeechDocument,
 };
 
@@ -30,6 +32,14 @@ const documents = {
  */
 export function graphql(source: string): unknown;
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetStores($name: String) {\n    stores: stores(name: $name) {\n      id\n      image\n      logo\n      name\n      category {\n        name\n        externalId\n      }\n    }\n    categories: categories(name: $name) {\n      name\n      externalId\n    }\n  }\n"): (typeof documents)["\n  query GetStores($name: String) {\n    stores: stores(name: $name) {\n      id\n      image\n      logo\n      name\n      category {\n        name\n        externalId\n      }\n    }\n    categories: categories(name: $name) {\n      name\n      externalId\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetCategories($name: String) {\n    categories(name: $name) {\n      name\n      externalId\n    }\n  }\n"): (typeof documents)["\n  query GetCategories($name: String) {\n    categories(name: $name) {\n      name\n      externalId\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
