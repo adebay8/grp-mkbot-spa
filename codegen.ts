@@ -2,7 +2,7 @@ import type { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
   overwrite: true,
-  schema: "https://mkbot-api.onrender.com/graphql",
+  schema: "https://mkbot-383411.nw.r.appspot.com/graphql",
   documents: "src/**/*.tsx",
   generates: {
     "src/gql/": {
