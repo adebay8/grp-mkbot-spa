@@ -169,7 +169,7 @@ const StartSection: React.FC<any> = () => {
           </video>
           <h1 className={styles.heading}>Where do you want to go?</h1>
           <div className={styles["start-action"]}>
-            <Link to="/search">
+            <Link to="/stores">
               <button className={styles["start-button"]}>
                 <FaSearch size={25} />
                 <p>Find store</p>

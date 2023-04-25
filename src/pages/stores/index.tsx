@@ -1,106 +1,118 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { Message, Topic } from "roslib";
-import { initiateRos, initiateTopic } from "../../helpers";
+import cx from "classnames";
+import { BsSearch } from "react-icons/bs";
+import { Link } from "react-router-dom";
 import { DefaultLayout } from "../../layouts";
-import styles from "./stores.module.scss";
+import styles from "./search.module.scss";
 import { useLazyQuery } from "@apollo/client";
-import { GET_STORE } from "./query";
-import { StoreType } from "../../gql/graphql";
+import { GET_STORES } from "./query";
 import { Spinner } from "../../components";
+import { useEffect, useState } from "react";
+import { CategoryType, StoreType } from "../../gql/graphql";
 
-const Stores = () => {
-  const [getStore] = useLazyQuery(GET_STORE);
+const HomeSearch: React.FC<any> = () => {
+  const [getStores] = useLazyQuery(GET_STORES);
 
-  const [store, setStore] = useState<StoreType>();
+  const [stores, setStores] = useState<StoreType[]>([]);
+  const [filteredStores, setFilteredStores] = useState<StoreType[]>([]);
+  const [categories, setCategories] = useState<CategoryType[]>([]);
+  const [activeCategory, setActiveCategory] = useState("");
   const [loading, setLoading] = useState(true);
-  const [, setRosMessage] = useState<Message>();
-  const [rosTopic, setRosTopic] = useState<Topic>();
-
-  const params = useParams();
-  const navigate = useNavigate();
-
-  const sendTargetToROS: React.MouseEventHandler<HTMLButtonElement> = () => {
-    const targetLocation = new Message({ data: store?.id });
-    rosTopic?.publish(targetLocation);
-    navigate(`/stores/${params.storeId}/navigation`);
-  };
-
-  const renderStore = () => {
-    if (loading)
-      return (
-        <div className={styles["spinner-container"]}>
-          <Spinner />
-        </div>
-      );
-    if (!store) return <>Store not found</>;
-    return (
-      <section className={styles.store}>
-        <figure className={styles["brand-logo"]}>
-          <img
-            src={store.rectangularLogo}
-            alt={store.name}
-            className={styles.logo}
-          />
-        </figure>
-        <div className={styles.options}>
-          <article className={styles.option}>
-            <div className={styles.map}>
-              <img src={store.image} alt={store.name} />
-            </div>
-            <div className={styles.details}>
-              <div>
-                <p className={styles.description}>{store.description}</p>
-                <p className={styles.address}>{store.address}</p>
-                <div className={styles.status}>Open</div>
-              </div>
-              <Link to="/complete"></Link>
-              <button
-                className={styles["action-button"]}
-                onClick={sendTargetToROS}
-              >
-                Let's go
-              </button>
-            </div>
-          </article>
-        </div>
-      </section>
-    );
-  };
-
-  useEffect(() => {
-    const ros = initiateRos();
-    const topic = initiateTopic({
-      ros,
-      name: "/destination_id",
-      messageType: "std_msgs/String",
-    });
-    setRosTopic(topic);
-
-    topic.subscribe((message) => {
-      setRosMessage(message);
-      console.log(message);
-    });
-  }, []);
+  const [input, setInput] = useState("");
 
   useEffect(() => {
     setLoading(true);
-    getStore({
-      variables: {
-        name: params.storeId,
-      },
-    })
+    getStores()
       .then((res) => {
-        setStore(res.data.store);
+        setStores(res.data.stores);
+        setFilteredStores(res.data.stores);
+        setCategories(res.data.categories);
         setLoading(false);
       })
-      .catch(() => {
-        setLoading(false);
-      });
+      .catch(() => {});
+
     // eslint-disable-next-line
   }, []);
 
-  return <DefaultLayout>{renderStore()}</DefaultLayout>;
+  return (
+    <DefaultLayout>
+      <div className={cx(styles.step, styles["step-two"])}>
+        <form
+          className={styles["search-container"]}
+          onSubmit={(e) => {
+            e.preventDefault();
+          }}
+        >
+          <select
+            className={styles.dropdown}
+            onChange={(e) => {
+              setActiveCategory(e.target.value);
+              const filtered = stores.filter(
+                (store) =>
+                  (e.target.value === "" ||
+                    store.category?.externalId === Number(e.target.value)) &&
+                  store.name.toLowerCase().includes(input.toLowerCase())
+              );
+              setFilteredStores(filtered);
+            }}
+          >
+            <option value="">All categories</option>
+            {categories.map((category) => (
+              <option key={category.externalId} value={category.externalId}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+          <input
+            placeholder="Where do you want to go?"
+            className={styles.input}
+            autoFocus
+            onChange={(e) => {
+              setInput(e.target.value);
+
+              const filtered = stores.filter(
+                (store) =>
+                  store.name
+                    .toLowerCase()
+                    .includes(e.target.value.toLowerCase()) &&
+                  (() => {
+                    if (activeCategory !== "") {
+                      return (
+                        store.category?.externalId === Number(activeCategory)
+                      );
+                    }
+                    return true;
+                  })()
+              );
+              setFilteredStores(filtered);
+            }}
+            value={input}
+          />
+          <button type="submit" className={styles.button}>
+            <BsSearch size={30} />
+          </button>
+        </form>
+        <div className={styles.suggestions}>
+          {loading ? (
+            <Spinner />
+          ) : (
+            filteredStores.map((item) => (
+              <Link
+                to={`/stores/${item.name.split(" ").join("-").toLowerCase()}`}
+                key={item.id}
+              >
+                <img
+                  src={item.logo}
+                  key={item.id}
+                  alt={item.name}
+                  className={styles.suggestion}
+                />
+              </Link>
+            ))
+          )}
+        </div>
+      </div>
+    </DefaultLayout>
+  );
 };
 
-export default Stores;
+export default HomeSearch;

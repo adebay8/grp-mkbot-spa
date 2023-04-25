@@ -11,7 +11,7 @@ const App: React.FC = () => {
       element: <Home />,
     },
     {
-      path: "/search",
+      path: "/stores",
       element: <Search />,
     },
     {
