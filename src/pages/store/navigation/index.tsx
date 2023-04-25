@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { Store, stores } from "../../../helpers";
-import { DefaultLayout } from "../../../layouts";
+import styles from "./navigation.module.scss";
 
 const StoreNavigation = () => {
   const params = useParams();
@@ -15,13 +15,13 @@ const StoreNavigation = () => {
   const renderNavigation = (store?: Store) => {
     if (!store) return <>Not found</>;
     return (
-      <p>
-        Heading to {store.name} at {store.address}
-      </p>
+      <video autoPlay loop playsInline className={styles.video}>
+        <source src="https://storage.googleapis.com/mkbot_staticfiles/videos/walking%20model%202.mp4" />
+      </video>
     );
   };
 
-  return <DefaultLayout>{renderNavigation(findStore())}</DefaultLayout>;
+  return <>{renderNavigation(findStore())}</>;
 };
 
 export default StoreNavigation;

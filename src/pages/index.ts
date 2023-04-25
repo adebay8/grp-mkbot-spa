@@ -1,5 +1,5 @@
 export { default as Home } from "./home";
-export { default as Search } from "./search";
-export { default as Stores } from "./stores";
-export { default as Complete } from "./stores/complete";
-export { default as Navigation } from "./stores/navigation";
+export { default as Search } from "./stores";
+export { default as Stores } from "./store";
+export { default as Complete } from "./store/complete";
+export { default as Navigation } from "./store/navigation";
