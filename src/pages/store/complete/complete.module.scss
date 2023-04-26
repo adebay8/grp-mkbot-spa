@@ -59,3 +59,30 @@
   align-items: center;
   justify-content: center;
 }
+
+.home {
+  text-decoration: none;
+  margin-top: 30px;
+  outline: none;
+  background: transparent;
+  height: 100%;
+  border: none;
+  cursor: pointer;
+  background: #0d9648;
+  color: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  font-weight: 500;
+  font-size: 20px;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+
+  &.outline {
+    background: transparent;
+    border: 2px solid #0d9648;
+    color: #0d9648;
+  }
+}
