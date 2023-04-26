@@ -35,7 +35,8 @@
     transition: height 0.5s linear;
 
     &.completed {
-      &Failed {
+      &Failed,
+      &Success {
         height: 200px;
       }
     }
@@ -45,7 +46,8 @@
     background: #007acc;
   }
 
-  &.completedFailed {
+  &.completedFailed,
+  &.completedSuccess {
     background: #0ea750;
   }
 }
@@ -89,7 +91,8 @@
     background: #007acc;
   }
 
-  &.completedFailed {
+  &.completedFailed,
+  &.completedSuccess {
     background: #0d9648;
     animation: none;
   }

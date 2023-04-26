@@ -21,9 +21,15 @@ const Stores = () => {
   const navigate = useNavigate();
 
   const sendTargetToROS: React.MouseEventHandler<HTMLButtonElement> = () => {
-    const targetLocation = new Message({ data: store?.id });
+    if (!store) return;
+    const targetLocation = new Message({ data: store.id });
     rosTopic?.publish(targetLocation);
-    navigate(`/stores/${params.storeId}/navigation`);
+
+    navigate(
+      `/stores/${encodeURI(
+        store.category ? store.category.name.toLowerCase() : "technology"
+      )}/${params.storeId}/navigation`
+    );
   };
 
   const renderStore = () => {

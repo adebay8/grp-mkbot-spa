@@ -10,6 +10,9 @@ export const GET_STORE = gql`
       name
       rectangularLogo
       description
+      category {
+        name
+      }
     }
   }
 `;

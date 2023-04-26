@@ -8,6 +8,7 @@ import { useRef, useState } from "react";
 import { useMutation } from "@apollo/client";
 import { GET_STORE_FROM_SPEECH } from "./query";
 import { HomeSpeech, TranscriptionState } from "../speech";
+import { StoreType } from "../../gql/graphql";
 
 const mimeType = "audio/webm";
 
@@ -28,6 +29,10 @@ const StartSection: React.FC<any> = () => {
   const [stream, setStream] = useState<MediaStream>();
   const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
   const mediaRecorder = useRef<MediaRecorder>();
+  const [transcriptionData, setTranscriptionData] = useState<{
+    store: StoreType;
+    transcription: string;
+  }>();
 
   const getMicrophonePermission = async () => {
     if ("MediaRecorder" in window) {
@@ -91,7 +96,7 @@ const StartSection: React.FC<any> = () => {
   };
 
   const runMutation = async (formData: FormData) => {
-    fetch("http://127.0.0.1:8000/speech/upload", {
+    fetch(`${process.env.REACT_APP_API_URL}/speech/upload`, {
       method: "POST",
       body: formData,
     })
@@ -110,8 +115,11 @@ const StartSection: React.FC<any> = () => {
         })
           .then((res) => {
             if (res.data.getStoreFromSpeech.store) {
-              // const { name } = res.data.getStoreFromSpeech.store;
-              // navigate(`/stores/${name.toLowerCase()}`);
+              setTranscriptionData({
+                store: res.data.getStoreFromSpeech.store,
+                transcription: res.data.getStoreFromSpeech.transcription,
+              });
+              setRecorderStatus(RecordingStatus.completedSuccess);
             } else {
               setRecorderStatus(RecordingStatus.completedFailed);
             }
@@ -157,6 +165,7 @@ const StartSection: React.FC<any> = () => {
                 startRecording(stream);
               })
             }
+            data={transcriptionData}
           />
         </>
       ) : (
@@ -171,7 +180,7 @@ const StartSection: React.FC<any> = () => {
           <div className={styles["start-action"]}>
             <Link to="/stores">
               <button className={styles["start-button"]}>
-                <FaSearch size={25} />
+                <FaSearch className={styles["search-icon"]} />
                 <p>Find store</p>
               </button>
             </Link>

@@ -15,15 +15,19 @@ const App: React.FC = () => {
       element: <Search />,
     },
     {
-      path: "/stores/:storeId",
+      path: "/stores/:categoryId",
+      element: <Search />,
+    },
+    {
+      path: "/stores/:categoryId/:storeId",
       element: <Stores />,
     },
     {
-      path: "/stores/:storeId/navigation",
+      path: "/stores/:categoryId/:storeId/navigation",
       element: <Navigation />,
     },
     {
-      path: "/stores/:storeId/complete",
+      path: "/stores/:categoryId/:storeId/complete",
       element: <Complete />,
     },
   ]);
