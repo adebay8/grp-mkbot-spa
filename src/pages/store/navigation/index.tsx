@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 const StoreNavigation = () => {
   const params = useParams();
   const navigate = useNavigate();
-  const [allow, setAllow] = useState(false)
-  const [robotState, setRobotState] = useState<number>(0)
+  const [allow, setAllow] = useState(false);
+  const [robotState, setRobotState] = useState<number>(0);
 
   useEffect(() => {
     const ros = initiateRos();
@@ -18,29 +18,26 @@ const StoreNavigation = () => {
     });
 
     statusTopic.subscribe((message) => {
-      const result = message as any
+      const result = message as any;
 
       if (result.status_list[0].status === 1) {
-        setAllow(true)
-        setRobotState(1)
+        setAllow(true);
+        setRobotState(1);
       }
 
       if (result.status_list[0].status === 3) {
-        setRobotState(3)
+        setRobotState(3);
       }
-
     });
-
-  }, [])
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     if (allow && robotState === 3) {
-
-      navigate(
-        `/stores/${params.categoryId}/${params.storeId}/complete`
-      );
+      navigate(`/stores/${params.categoryId}/${params.storeId}/complete`);
     }
-  }, [robotState, allow])
+    // eslint-disable-next-line
+  }, [robotState, allow]);
 
   const renderNavigation = () => {
     return (
