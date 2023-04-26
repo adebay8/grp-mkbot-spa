@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_STORES = gql`
-  query GetStores($name: String) {
-    stores: stores(name: $name) {
+  query GetStores($storeName: String, $categoryName: String) {
+    stores: stores(name: $storeName, category: $categoryName) {
       id
       image
       logo
@@ -12,7 +12,7 @@ export const GET_STORES = gql`
         externalId
       }
     }
-    categories: categories(name: $name) {
+    categories: categories(name: $categoryName) {
       name
       externalId
     }

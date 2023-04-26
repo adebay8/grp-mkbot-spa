@@ -29,8 +29,17 @@
   }
 
   .video {
-    width: 700px;
+    width: 60%;
+    min-width: 700px;
     margin-bottom: 30px;
+
+    @media (min-width: 1440px) {
+      width: 50vw;
+    }
+
+    @media (min-width: 1700px) {
+      width: 70%;
+    }
   }
 
   .heading {
@@ -64,14 +73,27 @@
     align-items: center;
     gap: 20px;
 
-    svg {
+    .search-icon {
       display: block;
       transform: scaleX(-1);
+      font-size: 25px;
+
+      @media (min-width: 1440px) {
+        font-size: 30px;
+      }
     }
 
     p {
       font-size: 25px;
       font-weight: 550;
+    }
+
+    @media (min-width: 1400px) {
+      padding: 35px 40px;
+
+      p {
+        font-size: 40px;
+      }
     }
   }
 

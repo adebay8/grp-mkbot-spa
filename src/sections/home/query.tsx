@@ -7,7 +7,11 @@ export const GET_STORE_FROM_SPEECH = gql`
         id
         name
         description
+        category {
+          name
+        }
       }
+      transcription
     }
   }
 `;

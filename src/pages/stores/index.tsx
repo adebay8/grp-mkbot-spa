@@ -1,6 +1,6 @@
 import cx from "classnames";
 import { BsSearch } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { DefaultLayout } from "../../layouts";
 import styles from "./search.module.scss";
 import { useLazyQuery } from "@apollo/client";
@@ -10,6 +10,10 @@ import { useEffect, useState } from "react";
 import { CategoryType, StoreType } from "../../gql/graphql";
 
 const HomeSearch: React.FC<any> = () => {
+  const params = useParams();
+  const categoryName = decodeURI(params.categoryId ?? "");
+
+  console.log(categoryName);
   const [getStores] = useLazyQuery(GET_STORES);
 
   const [stores, setStores] = useState<StoreType[]>([]);
@@ -21,7 +25,11 @@ const HomeSearch: React.FC<any> = () => {
 
   useEffect(() => {
     setLoading(true);
-    getStores()
+    getStores({
+      variables: {
+        categoryName,
+      },
+    })
       .then((res) => {
         setStores(res.data.stores);
         setFilteredStores(res.data.stores);
@@ -91,13 +99,18 @@ const HomeSearch: React.FC<any> = () => {
             <BsSearch size={30} />
           </button>
         </form>
-        <div className={styles.suggestions}>
-          {loading ? (
+
+        {loading ? (
+          <div className={styles["spinner-container"]}>
             <Spinner />
-          ) : (
-            filteredStores.map((item) => (
+          </div>
+        ) : (
+          <div className={styles.suggestions}>
+            {filteredStores.map((item) => (
               <Link
-                to={`/stores/${item.name.split(" ").join("-").toLowerCase()}`}
+                to={`/stores/${encodeURI(
+                  item.category?.name.toLowerCase() as string
+                )}/${item.name.split(" ").join("-").toLowerCase()}`}
                 key={item.id}
               >
                 <img
@@ -107,9 +120,9 @@ const HomeSearch: React.FC<any> = () => {
                   className={styles.suggestion}
                 />
               </Link>
-            ))
-          )}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </DefaultLayout>
   );

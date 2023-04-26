@@ -1,19 +1,27 @@
-import { useParams } from "react-router-dom";
-import { Store, stores } from "../../../helpers";
+// import { useNavigate, useParams } from "react-router-dom";
 import styles from "./navigation.module.scss";
+import { initiateRos, initiateTopic } from "../../../helpers";
 
 const StoreNavigation = () => {
-  const params = useParams();
+  // const params = useParams();
+  // const navigate = useNavigate();
 
-  const findStore = () => {
-    const store = stores.find(
-      ({ name }) => name.toLowerCase() === params.storeId
-    );
-    return store;
-  };
+  const ros = initiateRos();
+  const statusTopic = initiateTopic({
+    ros,
+    name: "/move_base/status",
+    messageType: "actionlib_msgs/GoalStatusArray",
+  });
 
-  const renderNavigation = (store?: Store) => {
-    if (!store) return <>Not found</>;
+  statusTopic.subscribe((message) => {
+    // if (message.data.status == "1") {
+    //   navigate(
+    //     `/stores/${params.categoryId}/${params.storeId}/complete`
+    //   );
+    // }
+  });
+
+  const renderNavigation = () => {
     return (
       <video autoPlay loop playsInline className={styles.video}>
         <source src="https://storage.googleapis.com/mkbot_staticfiles/videos/walking%20model%202.mp4" />
@@ -21,7 +29,7 @@ const StoreNavigation = () => {
     );
   };
 
-  return <>{renderNavigation(findStore())}</>;
+  return <>{renderNavigation()}</>;
 };
 
 export default StoreNavigation;
