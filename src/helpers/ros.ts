@@ -9,7 +9,7 @@ type initiateTopicType = (config: {
 
 export const initiateRos: InitiateRosType = () => {
   const ros = new Ros({
-    url: "ws://192.168.0.151:9999",
+    url: process.env.REACT_APP_ROS_BRIDGE_SOCKET,
   });
 
   ros.on("connection", (event) => {

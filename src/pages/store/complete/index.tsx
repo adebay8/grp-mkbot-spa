@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { DefaultLayout } from "../../../layouts";
 import styles from "./complete.module.scss";
 import { useEffect, useState } from "react";
@@ -55,6 +55,11 @@ const Complete = () => {
             <img alt="Waving hand" src="/images/waving-hand.png" />
             <h2>We've arrived at {store.name}</h2>
             <p>Enjoy your shopping</p>
+            <Link to="/">
+              <button className={cx(styles.home, styles.outline)} >
+                Go home
+              </button>
+            </Link>
           </div>
         </div>
       </section>

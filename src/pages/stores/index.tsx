@@ -1,6 +1,6 @@
 import cx from "classnames";
 import { BsSearch } from "react-icons/bs";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { DefaultLayout } from "../../layouts";
 import styles from "./search.module.scss";
 import { useLazyQuery } from "@apollo/client";
@@ -8,12 +8,13 @@ import { GET_STORES } from "./query";
 import { Spinner } from "../../components";
 import { useEffect, useState } from "react";
 import { CategoryType, StoreType } from "../../gql/graphql";
+import { BiArrowBack } from "react-icons/bi";
 
 const HomeSearch: React.FC<any> = () => {
   const params = useParams();
   const categoryName = decodeURI(params.categoryId ?? "");
+  const navigate = useNavigate()
 
-  console.log(categoryName);
   const [getStores] = useLazyQuery(GET_STORES);
 
   const [stores, setStores] = useState<StoreType[]>([]);
@@ -36,7 +37,7 @@ const HomeSearch: React.FC<any> = () => {
         setCategories(res.data.categories);
         setLoading(false);
       })
-      .catch(() => {});
+      .catch(() => { });
 
     // eslint-disable-next-line
   }, []);
@@ -44,6 +45,14 @@ const HomeSearch: React.FC<any> = () => {
   return (
     <DefaultLayout>
       <div className={cx(styles.step, styles["step-two"])}>
+        <button
+          className={styles.back}
+          onClick={() => {
+            navigate("/")
+          }}
+        >
+          <BiArrowBack size={25} />
+        </button>
         <form
           className={styles["search-container"]}
           onSubmit={(e) => {

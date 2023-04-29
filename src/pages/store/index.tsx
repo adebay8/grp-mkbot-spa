@@ -8,6 +8,7 @@ import { useLazyQuery } from "@apollo/client";
 import { GET_STORE } from "./query";
 import { StoreType } from "../../gql/graphql";
 import { Spinner } from "../../components";
+import { BiArrowBack } from "react-icons/bi";
 
 const Stores = () => {
   const [getStore] = useLazyQuery(GET_STORE);
@@ -42,6 +43,14 @@ const Stores = () => {
     if (!store) return <>Store not found</>;
     return (
       <section className={styles.store}>
+           <button
+          className={styles.back}
+          onClick={() => {
+            navigate(-1)
+          }}
+        >
+          <BiArrowBack size={25} />
+        </button>
         <figure className={styles["brand-logo"]}>
           <img
             src={store.rectangularLogo}
